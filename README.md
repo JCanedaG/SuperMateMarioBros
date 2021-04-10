@@ -3,7 +3,7 @@ Super Mario Bros - Nivel 1
 
 Juego creado en Python usando Pygame con la intención de recrear el primer nivel de Super Mario Bros.
 
-![screenshot](https://raw.github.com/justinmeister/Mario-Level-1/master/screenshot.png)
+![screenshot](https://github.com/JCanedaG/SuperMateMarioBros/blob/6a80f403e27d5e065f8d6ff9757a97e59af8f6c4/screenshot.png)
 
 Controles:
 
