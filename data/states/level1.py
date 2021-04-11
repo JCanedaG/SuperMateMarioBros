@@ -8,6 +8,7 @@ from .. import game_sound
 from .. components import mario
 from .. components import collider
 from .. components import bricks
+from .. components import expresion
 from .. components import coin_box
 from .. components import enemies
 from .. components import checkpoint
@@ -44,6 +45,7 @@ class Level1(tools._State):
         self.setup_pipes()
         self.setup_steps()
         self.setup_bricks()
+        self.setup_expresiones()
         self.setup_coin_boxes()
         self.setup_flag_pole()
         self.setup_enemies()
@@ -196,6 +198,30 @@ class Level1(tools._State):
 
 
         self.brick_group = brick_group
+
+    def setup_expresiones(self):
+        """Creates all the breakable bricks for the level.  Coin and
+        powerup groups are created so they can be passed to bricks."""
+        self.expresiones_group = pg.sprite.Group()
+        """
+        brick17 = bricks.Brick(4030, 365, c.SIXCOINS, self.coin_group)
+        brick19 = bricks.Brick(4330, 365, c.STAR, self.powerup_group)
+        """
+        
+        expresiones_group = pg.sprite.Group()
+
+        #Habrá 5 preguntas por nivel
+        cuentas = ['10-3',
+                   '347+5',
+                   '298*63',
+                   '5-37',
+                   '2+2']
+        for i in range(5):
+            expresiones_group.add(expresion.Expresion((400 + i*1500), 200, cuentas[i]))
+          
+
+
+        self.expresiones_group = expresiones_group
 
     def setup_coin_boxes(self):
         """Creates all the coin boxes and puts them in a sprite group"""
@@ -1417,6 +1443,7 @@ class Level1(tools._State):
         self.shell_group.draw(self.level)
         #self.check_point_group.draw(self.level)
         self.brick_pieces_group.draw(self.level)
+        self.expresiones_group.draw(self.level)
         self.flag_pole_group.draw(self.level)
         self.mario_and_enemy_group.draw(self.level)
 
