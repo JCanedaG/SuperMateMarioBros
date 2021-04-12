@@ -211,17 +211,40 @@ class Level1(tools._State):
         expresiones_group = pg.sprite.Group()
 
         #Habrá 5 preguntas por nivel
-        cuentas = ['10-3',
-                   '347+5',
-                   '298*63',
-                   '5-37',
-                   '2+2']
+        cuentas, resultados, con_salida = self.generar_expresiones_nivel(1)
+        
         for i in range(5):
             expresiones_group.add(expresion.Expresion((400 + i*1500), 200, cuentas[i]))
+
+            for k in range(4):
+                expresiones_group.add(expresion.Expresion((890+i*1500), c.GROUND_HEIGHT - (k+0.5)*(43*3), resultados[i][k]))
+                if not con_salida[i][k]:
+                    self.brick_group.add(bricks.Brick((858+i*1500) + 18*43, c.GROUND_HEIGHT - (k+0.5)*(43*3)))
           
 
 
         self.expresiones_group = expresiones_group
+
+    def generar_expresiones_nivel(self, nivel):
+        cuentas = ['10-3',
+                   '347+5',
+                   '2*60',
+                   '48/8',
+                   '2+2']
+        resultados = [['7', '6', '5', '8'], 
+                      ['344', '352', '354', '-352'],
+                      ['100', '110', '120', '130'],
+                      ['4', '5', '8', '6'],
+                      ['4', '5', '6', '7']]
+
+        con_salida = [[1, 0, 0, 0], 
+                      [0, 1, 0, 0],
+                      [0, 0, 1, 0],
+                      [0, 0, 0, 1],
+                      [1, 0, 0, 0]]
+
+        return cuentas, resultados, con_salida
+
 
     def setup_coin_boxes(self):
         """Creates all the coin boxes and puts them in a sprite group"""
@@ -337,7 +360,7 @@ class Level1(tools._State):
         """Creates invisible checkpoints that when collided will trigger
         the creation of enemies from the self.enemy_group_list"""
         check1 = checkpoint.Checkpoint(510, "1")
-        check2 = checkpoint.Checkpoint(1400, '2')
+        check2 = checkpoint.Checkpoint(1500, '2')
         check3 = checkpoint.Checkpoint(1740, '3')
         check4 = checkpoint.Checkpoint(3080, '4')
         check5 = checkpoint.Checkpoint(3750, '5')
@@ -1451,5 +1474,6 @@ class Level1(tools._State):
         self.overhead_info_display.draw(surface)
         for score in self.moving_score_list:
             score.draw(surface)
+
 
 
