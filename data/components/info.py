@@ -27,6 +27,7 @@ class OverheadInfo(object):
         self.state = state
         self.special_state = None
         self.game_info = game_info
+        self.nivel_actual = 1
 
         self.create_image_dict()
         self.create_score_group()
@@ -126,7 +127,7 @@ class OverheadInfo(object):
         self.create_label(self.mario_label, 'MARIO', 75, 30)
         self.create_label(self.world_label, 'WORLD', 450, 30)
         self.create_label(self.time_label, 'TIME', 625, 30)
-        self.create_label(self.stage_label, '1-1', 472, 55)
+        self.create_label(self.stage_label, '1-'+str(self.nivel_actual), 472, 55)
 
         self.label_list = [self.mario_label,
                            self.world_label,
@@ -139,8 +140,8 @@ class OverheadInfo(object):
         world_label = []
         number_label = []
 
-        self.create_label(world_label, 'WORLD', 280, 200)
-        self.create_label(number_label, '1-1', 430, 200)
+        self.create_label(world_label, 'LEVEL', 280, 200)
+        self.create_label(number_label, str(self.game_info[c.LEVEL]), 430, 200)
 
         self.center_labels = [world_label, number_label]
 

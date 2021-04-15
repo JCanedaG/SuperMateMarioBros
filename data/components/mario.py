@@ -44,9 +44,9 @@ class Mario(pg.sprite.Sprite):
         self.facing_right = True
         self.allow_jump = True
         self.dead = False
-        self.invincible = False
-        self.big = False
-        self.fire = False
+        self.invincible = True #False
+        self.big = True #False
+        self.fire = True #False
         self.allow_fireball = True
         self.in_transition_state = False
         self.hurt_invincible = False

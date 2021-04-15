@@ -129,7 +129,6 @@ class Expresion(pg.sprite.Sprite):
             elif i == c.SUMA:
                 image_aux = self.get_image(c.X_SUMA, c.Y_PRIMERA_FILA, c.ANCHO_SUMA, c.SIMBOLOS_HEIGHT)
             elif i == c.RESTA:
-                print('Por auqi paso')
                 image_aux = self.get_image(c.X_RESTA, c.Y_PRIMERA_FILA, c.ANCHO_RESTA, c.SIMBOLOS_HEIGHT)
             elif i == c.MULTIPLICACION:
                 image_aux = self.get_image(c.X_MULTIPLICACION, c.Y_SEGUNDA_FILA, c.ANCHO_MULTIPLICACION, c.SIMBOLOS_HEIGHT)
