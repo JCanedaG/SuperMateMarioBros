@@ -1,3 +1,8 @@
+#Carpetas
+data/__pycache__/
+data/components/__pycache__/
+data/states/__pycache__/
+
 #OS junk files
 [Tt]humbs.db
 *.DS_Store

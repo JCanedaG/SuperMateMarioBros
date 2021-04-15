@@ -270,11 +270,6 @@ class Level1(tools._State):
             # Ahora completamos la lista de caminos con y sin salida
             caminos_sin_salida = []
             for j in range(4):
-                print('int(posibles_resultados[j]==resultado)')
-                print(posibles_resultados[j])
-                print(resultado)
-                print(posibles_resultados[j]==resultado)
-                print(int(posibles_resultados[j]==resultado))
                 caminos_sin_salida.append(int(posibles_resultados[j]==resultado))
 
             #Completamos ahora las listas
