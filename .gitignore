@@ -1,0 +1,8 @@
+#Carpetas
+data/__pycache__/
+data/components/__pycache__/
+data/states/__pycache__/
+
+data\__pycache__\
+data\components\__pycache__\
+data\states\__pycache__\
