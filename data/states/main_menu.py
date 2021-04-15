@@ -17,7 +17,8 @@ class Menu(tools._State):
                    c.CURRENT_TIME: 0.0,
                    c.LEVEL_STATE: None,
                    c.CAMERA_START_X: 0,
-                   c.MARIO_DEAD: False}
+                   c.MARIO_DEAD: False,
+                   c.LEVEL: 1}
         self.startup(0.0, persist)
 
     def startup(self, current_time, persist):

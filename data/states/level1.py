@@ -24,6 +24,8 @@ class Level1(tools._State):
 
     def startup(self, current_time, persist):
         """Called when the State object is created"""
+        print('persist en startup')
+        print(persist)
         self.game_info = persist
         self.persist = self.game_info
         self.game_info[c.CURRENT_TIME] = current_time
@@ -38,7 +40,7 @@ class Level1(tools._State):
 
         self.moving_score_list = []
         self.overhead_info_display = info.OverheadInfo(self.game_info, c.LEVEL)
-        self.sound_manager = game_sound.Sound(self.overhead_info_display)
+        self.sound_manager = None #game_sound.Sound(self.overhead_info_display)
 
         self.setup_background()
         self.setup_ground()
@@ -211,7 +213,7 @@ class Level1(tools._State):
         expresiones_group = pg.sprite.Group()
 
         #Habrá 5 preguntas por nivel
-        cuentas, resultados, con_salida = self.generar_expresiones_nivel(1)
+        cuentas, resultados, con_salida = self.generar_expresiones_nivel(self.game_info[c.LEVEL])
         
         for i in range(5):
             expresiones_group.add(expresion.Expresion((400 + i*1500), 200, cuentas[i]))
@@ -237,11 +239,11 @@ class Level1(tools._State):
                       ['4', '5', '8', '6'],
                       ['4', '5', '6', '7']]
 
-        con_salida = [[1, 0, 0, 0], 
-                      [0, 1, 0, 0],
-                      [0, 0, 1, 0],
-                      [0, 0, 0, 1],
-                      [1, 0, 0, 0]]
+        con_salida = [[1, 1, 0, 0], 
+                      [1, 1, 0, 0],
+                      [1, 1, 1, 0],
+                      [1, 1, 0, 1],
+                      [1, 1, 0, 0]]
 
         return cuentas, resultados, con_salida
 
@@ -400,7 +402,7 @@ class Level1(tools._State):
         self.handle_states(keys)
         self.check_if_time_out()
         self.blit_everything(surface)
-        self.sound_manager.update(self.game_info, self.mario)
+        #self.sound_manager.update(self.game_info, self.mario)
 
 
 
@@ -1448,9 +1450,10 @@ class Level1(tools._State):
             self.flag_timer = self.current_time
         elif (self.current_time - self.flag_timer) > 2000:
             self.set_game_info_values()
-            self.next = c.GAME_OVER
-            self.sound_manager.stop_music()
+            self.next = c.LOAD_SCREEN
+            #self.sound_manager.stop_music()
             self.done = True
+            self.game_info[c.LEVEL] += 1
 
 
     def blit_everything(self, surface):
