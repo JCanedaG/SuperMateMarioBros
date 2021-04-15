@@ -228,6 +228,62 @@ class Level1(tools._State):
         self.expresiones_group = expresiones_group
 
     def generar_expresiones_nivel(self, nivel):
+
+        import random
+
+        posibles_operaciones = [c.SUMA,
+                                c.RESTA,
+                                c.MULTIPLICACION,
+                                c.DIVISION]
+        
+        #Calculamos cada una de las cuentas con sus resultados y posibles órdenes
+        cuentas = []
+        resultados = []
+        con_salida = []
+        # Como hay 5 operaciones por nivel haremos 5 veces el mismo proceso
+
+        for i in range(5):
+            operando_1 = random.randint(1,10)
+            operando_2 = random.randint(1,10)
+            operacion  = posibles_operaciones[random.randint(0,3)]
+
+            #Calculamos el resultado de la operación obtenida al azar
+            if operacion == c.SUMA:
+                resultado = operando_1 + operando_2
+            elif operacion == c.RESTA:
+                resultado = operando_1 - operando_2
+            elif operacion == c.MULTIPLICACION:
+                resultado = operando_1 * operando_2
+            elif operacion == c.DIVISION:
+                # Para que la división sea exacta hacemos un pequeño truco
+                resultado = operando_1
+                operando_1 = resultado * operando_2
+
+            # Hallamos otros posibles resultados
+            posibles_resultados = [resultado]
+            for j in range(3):
+                posibles_resultados.append(random.randint(resultado-10, resultado+10))
+
+            # Y ahora los desordenamos al azar
+            random.shuffle(posibles_resultados)
+
+            # Ahora completamos la lista de caminos con y sin salida
+            caminos_sin_salida = []
+            for j in range(4):
+                print('int(posibles_resultados[j]==resultado)')
+                print(posibles_resultados[j])
+                print(resultado)
+                print(posibles_resultados[j]==resultado)
+                print(int(posibles_resultados[j]==resultado))
+                caminos_sin_salida.append(int(posibles_resultados[j]==resultado))
+
+            #Completamos ahora las listas
+            cuentas.append(str(operando_1)+operacion+str(operando_2))
+            resultados.append(posibles_resultados)
+            con_salida.append(caminos_sin_salida)
+
+
+        """
         cuentas = ['10-3',
                    '347+5',
                    '2*60',
@@ -239,12 +295,13 @@ class Level1(tools._State):
                       ['4', '5', '8', '6'],
                       ['4', '5', '6', '7']]
 
-        con_salida = [[1, 1, 0, 0], 
-                      [1, 1, 0, 0],
-                      [1, 1, 1, 0],
-                      [1, 1, 0, 1],
-                      [1, 1, 0, 0]]
 
+        con_salida = [[1, 0, 0, 0], 
+                      [0, 1, 0, 0],
+                      [0, 0, 1, 0],
+                      [0, 0, 0, 1],
+                      [1, 0, 0, 0]]
+        """
         return cuentas, resultados, con_salida
 
 
