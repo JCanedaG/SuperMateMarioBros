@@ -1,6 +1,8 @@
 __author__ = 'justinarmstrong'
 
 import pygame as pg
+import random
+
 from .. import setup
 from .. import constants as c
 from . import flashing_coin
@@ -198,11 +200,33 @@ class OverheadInfo(object):
         """Create the label for the GAME OVER screen"""
         game_label = []
         over_label = []
+        nivel_alcanzado_label = []
+        codigo_label = []
 
-        self.create_label(game_label, 'GAME', 280, 300)
-        self.create_label(over_label, 'OVER', 400, 300)
+        self.create_label(game_label, 'GAME', 280, 200)
+        self.create_label(over_label, 'OVER', 400, 200)
+        """
+        """
+        self.create_label(nivel_alcanzado_label, 'HAS ALCANZADO EL NIVEL ' + str(self.game_info[c.LEVEL]), 140, 300)
 
-        self.game_over_label = [game_label, over_label]
+        desde = int((c.PRIMER_NUM_CLAVE - self.game_info[c.LEVEL])/c.NUM_MAX_NIVELES + 0.5)
+        hasta = int((c.ULTIMO_NUM_CLAVE - self.game_info[c.LEVEL])/c.NUM_MAX_NIVELES)
+        codigo = hex(random.randint(desde,hasta) * c.NUM_MAX_NIVELES + int(self.game_info[c.LEVEL])).split('x')[-1].upper()
+
+        print('codigo')
+        print(random.randint(desde,hasta) * self.game_info[c.LEVEL])
+        print(codigo)
+
+        """
+        Obtenido en nivel 4
+        39970176
+        3438E0C
+        """
+
+
+        self.create_label(codigo_label, 'TU CODIGO ES ' + str(codigo), 180, 400)
+
+        self.game_over_label = [game_label, over_label, nivel_alcanzado_label, codigo_label]
 
 
     def create_time_out_label(self):
