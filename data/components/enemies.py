@@ -12,7 +12,7 @@ class Enemy(pg.sprite.Sprite):
         pg.sprite.Sprite.__init__(self)
 
 
-    def setup_enemy(self, x, y, direction, name, setup_frames, monstruo_principal=False):
+    def setup_enemy(self, x, y, direction, name, setup_frames, monstruo_principal=False, fueguito=False):
         """Sets up various values for enemy"""
         self.sprite_sheet = setup.GFX['smb_enemies_sheet']
         self.frames = []
@@ -25,6 +25,7 @@ class Enemy(pg.sprite.Sprite):
         self.name = name
         self.direction = direction
         self.monstruo_principal = monstruo_principal
+        self.fueguito = fueguito
         setup_frames()
 
         self.image = self.frames[self.frame_index]
@@ -32,15 +33,16 @@ class Enemy(pg.sprite.Sprite):
         self.rect.x = x #if not monstruo_principal else 0
         self.rect.bottom = y #if not monstruo_principal else c.GROUND_HEIGHT
         self.set_velocity()
-        print('name', self.name, 'self.rect.x', self.rect.x, self.monstruo_principal)
 
 
     def set_velocity(self):
         """Sets velocity vector based on direction"""
         if self.direction == c.LEFT:
             self.x_vel = -2
-        else:
+        elif self.direction == c.RIGHT:
             self.x_vel = 2
+        else:
+            self.x_vel = 0
 
         self.y_vel = 0
 
@@ -199,12 +201,30 @@ class Koopa(Enemy):
 
 
 
+class Fueguito(Enemy):
+
+    def __init__(self, y=0, x=0, direction=None, name='fueguito'):
+        Enemy.__init__(self)
+        self.setup_enemy(x, y, direction, name, self.setup_frames, fueguito=True)
+
+
+    def setup_frames(self):
+        """Sets frame list"""
+        self.frames.append(
+            self.get_image(364, 179, 8, 34, multiplier=c.FUEGUITO_SIZE_MULTIPLIER))
+        self.frames.append(
+            self.get_image(377, 179, 8, 34, multiplier=c.FUEGUITO_SIZE_MULTIPLIER))
+        self.frames.append(
+            self.get_image(420, 184, 16, 16, multiplier=c.FUEGUITO_SIZE_MULTIPLIER))
+        self.frames.append(
+            self.get_image(392, 185, 12, 12, multiplier=c.FUEGUITO_SIZE_MULTIPLIER))
+
+
 class Bowser(Enemy):
 
     def __init__(self, y=c.GROUND_HEIGHT, x=0, direction=c.RIGHT, name='bowser'):
         Enemy.__init__(self)
         self.setup_enemy(x, y, direction, name, self.setup_frames, monstruo_principal=True)
-        print('estoy creando un Bowser: ', x, y, self.frames)        
 
 
     def setup_frames(self):

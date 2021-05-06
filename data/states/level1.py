@@ -24,8 +24,6 @@ class Level1(tools._State):
 
 		def startup(self, current_time, persist):
 				"""Called when the State object is created"""
-				print('persist en startup')
-				print(persist)
 				self.game_info = persist
 				self.persist = self.game_info
 				self.game_info[c.CURRENT_TIME] = current_time
@@ -47,10 +45,10 @@ class Level1(tools._State):
 				self.setup_pipes()
 				self.setup_steps()
 				self.setup_bricks()
-				self.setup_expresiones()
 				self.setup_coin_boxes()
 				self.setup_flag_pole()
 				self.setup_enemies()
+				self.setup_expresiones()
 				self.setup_mario()
 				self.setup_checkpoints()
 				self.setup_spritegroups()
@@ -190,12 +188,25 @@ class Level1(tools._State):
 				#Habrá 5 preguntas por nivel
 				for i in range(5):
 					# Briks supletorios para acceder a pisos superiores
+					# Esta parte es la correspondiente a la plataforma incial
+					for j in range(5):
+							for k in range(12):
+									# Con esto ponemos forma de escalera
+									if (k-j >= 0) and (k+j <= 11):
+											brick_group.add(bricks.Brick(((225+k*43)+i*1500), c.GROUND_HEIGHT - (43 + j*43)))
+						
+					for j in range(2):
+							brick_group.add(bricks.Brick(((675 + 2*j*25)+i*1500), c.GROUND_HEIGHT - (270 + 2*j*45)))
+							if j == 0:
+									brick_group.add(bricks.Brick(((815)+i*1500), c.GROUND_HEIGHT - (270 + 2*j*43)))
+					"""
 					for k in range(3):
-						brick_group.add(bricks.Brick(((600 + 2*k*43)+i*1500), c.GROUND_HEIGHT - (129 + 2*k*43)))
+						brick_group.add(bricks.Brick(((600 + 2*k*43)+i*1500), c.GROUND_HEIGHT - (129 + 2*k*45)))
+					"""
 					# Briks que delimitan los cuatro pisos posibles
 					for j in range(19):
 						for k in range(4):
-							brick_group.add(bricks.Brick((858+i*1500) + j*43, c.GROUND_HEIGHT - (k+1)*(43*3)))
+							brick_group.add(bricks.Brick((858+i*1500) + j*43, c.GROUND_HEIGHT - (k+1)*(45*3)))
 
 				self.brick_group = brick_group
 
@@ -213,13 +224,17 @@ class Level1(tools._State):
 				#Habrá 5 preguntas por nivel
 				cuentas, resultados, con_salida = self.generar_expresiones_nivel(self.game_info[c.LEVEL])
 				
+				lista_fueguitos = []
 				for i in range(c.NUM_OPERACIONES):
 						expresiones_group.add(expresion.Expresion((400 + i*1500), 200, cuentas[i]))
 
 						for k in range(4):
-								expresiones_group.add(expresion.Expresion((890+i*1500), c.GROUND_HEIGHT - (k+0.5)*(43*3), resultados[i][k]))
+								expresiones_group.add(expresion.Expresion((890+i*1500), c.GROUND_HEIGHT - (k+0.5)*(45*3), resultados[i][k]))
 								if not con_salida[i][k]:
-										self.brick_group.add(bricks.Brick((858+i*1500) + 18*43, c.GROUND_HEIGHT - (k+0.5)*(43*3)))
+										#self.brick_group.add(bricks.Brick((858+i*1500) + 18*43, c.GROUND_HEIGHT - (k+0.5)*(43*3)))
+										lista_fueguitos.append(enemies.Fueguito(x=(858+i*1500) + 18*43, y=c.GROUND_HEIGHT - (k+0.1)*(45*3)))
+				fueguitos = pg.sprite.Group(lista_fueguitos)
+				self.enemy_group_list.insert(0,fueguitos)
 					
 
 
@@ -406,7 +421,7 @@ class Level1(tools._State):
 																 enemy_group10]
 				"""
 				lista_bowsers = []
-				for i in range(c.NUM_OPERACIONES):
+				for i in range(1, c.NUM_OPERACIONES + 1):
 						lista_bowsers.append(enemies.Bowser())
 				lista_grupos_enemigos = []
 				for i in range(len(lista_bowsers)):
@@ -448,9 +463,9 @@ class Level1(tools._State):
 																								 check13)
 				"""
 
-				lista_checkpoints = []
-				for i in range(c.NUM_OPERACIONES):
-						lista_checkpoints.append(checkpoint.Checkpoint(400 + i*1500, str(i+1)))
+				lista_checkpoints = [checkpoint.Checkpoint(350, '1')]
+				for i in range(1, c.NUM_OPERACIONES + 1):
+						lista_checkpoints.append(checkpoint.Checkpoint(400 + (i-1)*1500, str(i+1)))
 
 
 				lista_checkpoints.append(checkpoint.Checkpoint(8504, 'flagpole', 5, 6))
@@ -459,7 +474,6 @@ class Level1(tools._State):
 
 				self.check_point_group = pg.sprite.Group(lista_checkpoints)
 
-				print('self.check_point_group: ', [elemento.name for elemento in lista_checkpoints])
 
 				"""
 				check_flagpole        = checkpoint.Checkpoint(8504, 'flagpole', 5, 6)
@@ -562,17 +576,20 @@ class Level1(tools._State):
 																								 self.check_point_group)
 				if checkpoint:
 						checkpoint.kill()
-
-						for i in range(1, c.NUM_OPERACIONES + 1):
+						for i in range(1, c.NUM_OPERACIONES + 2):
 								if checkpoint.name == str(i):
-										# Matamos también todos los enemigos que queden vivos del checkpoint anterior
+										# Matamos también todos los enemigos que queden vivos del checkpoint anterior menos los fueguitos
 										for enemigo in self.enemy_group:
-												enemigo.kill()
+												if not enemigo.fueguito:
+														enemigo.kill()
 										for index, enemy in enumerate(self.enemy_group_list[i-1]):
 												if enemy.monstruo_principal:
 
 														enemy.rect.x = self.viewport.left - 400
 														enemy.rect.bottom = c.GROUND_HEIGHT
+
+												elif enemy.fueguito:
+														no_hago_nada = True
 
 												else:
 														enemy.rect.x = self.viewport.right + (index * 60)
