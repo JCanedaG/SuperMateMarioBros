@@ -12,7 +12,7 @@ class Enemy(pg.sprite.Sprite):
         pg.sprite.Sprite.__init__(self)
 
 
-    def setup_enemy(self, x, y, direction, name, setup_frames, monstruo_principal=False, fueguito=False):
+    def setup_enemy(self, x, y, direction, name, setup_frames, monstruo_principal=False, fueguito=False, nivel=1):
         """Sets up various values for enemy"""
         self.sprite_sheet = setup.GFX['smb_enemies_sheet']
         self.frames = []
@@ -32,20 +32,22 @@ class Enemy(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x #if not monstruo_principal else 0
         self.rect.bottom = y #if not monstruo_principal else c.GROUND_HEIGHT
-        self.set_velocity()
+        self.set_velocity(monstruo_principal=self.monstruo_principal, nivel=nivel)
 
 
-    def set_velocity(self):
+    def set_velocity(self, monstruo_principal=False, nivel=1):
         """Sets velocity vector based on direction"""
         if self.direction == c.LEFT:
             self.x_vel = -2
         elif self.direction == c.RIGHT:
-            self.x_vel = 2
+            if monstruo_principal:
+                # Para la velocidad de Bowser, 1.5 es muy lento, y 4 es muy rápido
+                # Hacemos para que se llegue a velocidad 4 al nivel 50
+                self.x_vel = 1.5 + 2.5*(nivel/50)
         else:
             self.x_vel = 0
 
         self.y_vel = 0
-
 
     def get_image(self, x, y, width, height, multiplier=c.SIZE_MULTIPLIER):
         """Get the image frames from the sprite sheet"""
@@ -222,9 +224,9 @@ class Fueguito(Enemy):
 
 class Bowser(Enemy):
 
-    def __init__(self, y=c.GROUND_HEIGHT, x=0, direction=c.RIGHT, name='bowser'):
+    def __init__(self, y=c.GROUND_HEIGHT, x=0, direction=c.RIGHT, name='bowser', nivel=1):
         Enemy.__init__(self)
-        self.setup_enemy(x, y, direction, name, self.setup_frames, monstruo_principal=True)
+        self.setup_enemy(x, y, direction, name, self.setup_frames, monstruo_principal=True, nivel=nivel)
 
 
     def setup_frames(self):

@@ -213,10 +213,6 @@ class OverheadInfo(object):
         hasta = int((c.ULTIMO_NUM_CLAVE - self.game_info[c.LEVEL])/c.NUM_MAX_NIVELES)
         codigo = hex(random.randint(desde,hasta) * c.NUM_MAX_NIVELES + int(self.game_info[c.LEVEL])).split('x')[-1].upper()
 
-        print('codigo')
-        print(random.randint(desde,hasta) * self.game_info[c.LEVEL])
-        print(codigo)
-
         """
         Obtenido en nivel 4
         39970176

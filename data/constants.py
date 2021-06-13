@@ -158,6 +158,8 @@ CURRENT_TIME = 'current time'
 LEVEL_STATE = 'level state'
 CAMERA_START_X = 'camera start x'
 MARIO_DEAD = 'mario dead'
+MARIO_BIG = 'mario big'
+MARIO_FIRE = 'mario fire'
 
 #STATES FOR ENTIRE GAME
 MAIN_MENU = 'main menu'

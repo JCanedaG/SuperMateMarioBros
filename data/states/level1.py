@@ -49,10 +49,12 @@ class Level1(tools._State):
 				self.setup_flag_pole()
 				self.setup_enemies()
 				self.setup_expresiones()
-				self.setup_mario()
+				self.setup_mario(persist)
 				self.setup_checkpoints()
 				self.setup_spritegroups()
 
+				if self.game_info[c.MARIO_BIG]:
+						self.convert_mushrooms_to_fireflowers()
 
 		def setup_background(self):
 				"""Sets the background image, rect and scales it to the correct
@@ -179,10 +181,17 @@ class Level1(tools._State):
 				self.coin_group = pg.sprite.Group()
 				self.powerup_group = pg.sprite.Group()
 				self.brick_pieces_group = pg.sprite.Group()
+
 				"""
-				brick17 = bricks.Brick(4030, 365, c.SIXCOINS, self.coin_group)
-				brick19 = bricks.Brick(4330, 365, c.STAR, self.powerup_group)
+				brick_monedas  = bricks.Brick(30, c.GROUND_HEIGHT - 400, c.SIXCOINS, self.coin_group)
+				brick_seta     = bricks.Brick(130, c.GROUND_HEIGHT - 400, c.MUSHROOM, self.powerup_group)
+				brick_estrella = bricks.Brick(230, c.GROUND_HEIGHT - 400, c.STAR, self.powerup_group)
+
+				self.coin_group.add(brick_monedas)
+				self.powerup_group.add(brick_seta)
+				self.powerup_group.add(brick_estrella)
 				"""
+								
 				
 				brick_group = pg.sprite.Group()
 				#Habrá 5 preguntas por nivel
@@ -234,6 +243,7 @@ class Level1(tools._State):
 										#self.brick_group.add(bricks.Brick((858+i*1500) + 18*43, c.GROUND_HEIGHT - (k+0.5)*(43*3)))
 										lista_fueguitos.append(enemies.Fueguito(x=(858+i*1500) + 18*43, y=c.GROUND_HEIGHT - (k+0.1)*(45*3)))
 				fueguitos = pg.sprite.Group(lista_fueguitos)
+
 				self.enemy_group_list.insert(0,fueguitos)
 					
 
@@ -256,20 +266,25 @@ class Level1(tools._State):
 				# Como hay 5 operaciones por nivel haremos 5 veces el mismo proceso
 
 				for i in range(5):
-						operando_1 = random.randint(1,10)
-						operando_2 = random.randint(1,10)
 						operacion  = posibles_operaciones[random.randint(0,3)]
 
 						#Calculamos el resultado de la operación obtenida al azar
 						if operacion == c.SUMA:
+								operando_1 = random.randint(1,5*(int((nivel-1)/3)+1))
+								operando_2 = random.randint(1,nivel+5)
 								resultado = operando_1 + operando_2
 						elif operacion == c.RESTA:
+								operando_1 = random.randint(1,5*(int((nivel-1)/3)+1))
+								operando_2 = random.randint(1,nivel+5)
 								resultado = operando_1 - operando_2
 						elif operacion == c.MULTIPLICACION:
+								operando_1 = random.randint(1,5*(int((nivel-1)/3)+1))
+								operando_2 = random.randint(1,nivel)*10**random.randint(0, 2)
 								resultado = operando_1 * operando_2
 						elif operacion == c.DIVISION:
 								# Para que la división sea exacta hacemos un pequeño truco
-								resultado = operando_1
+								resultado = random.randint(1,5*(int((nivel-1)/5)+1))
+								operando_2 = random.randint(1,nivel)*10**random.randint(0, 2)
 								operando_1 = resultado * operando_2
 
 						# Hallamos otros posibles resultados
@@ -316,10 +331,22 @@ class Level1(tools._State):
 		def setup_coin_boxes(self):
 				"""Creates all the coin boxes and puts them in a sprite group"""
 
+				self.coin_group = pg.sprite.Group()
+				self.powerup_group = pg.sprite.Group()
+				self.brick_pieces_group = pg.sprite.Group()
+
+
+				self.coin_box_group = pg.sprite.Group()				
+
+				for i in range(c.NUM_OPERACIONES):
+						if i == 1:
+								self.coin_box_group.add(coin_box.Coin_box((540 + i*1500), c.GROUND_HEIGHT - 400, c.MUSHROOM, self.powerup_group))
+						else:
+								self.coin_box_group.add(coin_box.Coin_box((540 + i*1500), c.GROUND_HEIGHT - 400, c.COIN, self.coin_group))
 				"""
-				coin_box1  = coin_box.Coin_box(685, 365, c.COIN, self.coin_group)
-				coin_box2  = coin_box.Coin_box(901, 365, c.MUSHROOM, self.powerup_group)
-				coin_box3  = coin_box.Coin_box(987, 365, c.COIN, self.coin_group)
+				coin_box1  = coin_box.Coin_box(685, c.GROUND_HEIGHT - 400, c.COIN, self.coin_group)
+				coin_box2  = coin_box.Coin_box(901, c.GROUND_HEIGHT - 400, c.MUSHROOM, self.powerup_group)
+				coin_box3  = coin_box.Coin_box(987, 365, c.STAR, self.coin_group)
 				coin_box4  = coin_box.Coin_box(943, 193, c.COIN, self.coin_group)
 				coin_box5  = coin_box.Coin_box(3342, 365, c.MUSHROOM, self.powerup_group)
 				coin_box6  = coin_box.Coin_box(4030, 193, c.COIN, self.coin_group)
@@ -337,9 +364,16 @@ class Level1(tools._State):
 																							coin_box9,  coin_box10,
 																							coin_box11, coin_box12)
 
-				"""
 
+				brick_monedas  = bricks.Brick(30, c.GROUND_HEIGHT - 400, c.COIN, self.coin_group)
+				brick_seta     = bricks.Brick(130, c.GROUND_HEIGHT - 400, c.MUSHROOM, self.powerup_group)
+				brick_estrella = bricks.Brick(230, c.GROUND_HEIGHT - 400, c.STAR, self.powerup_group)
+
+				self.coin_box_group = pg.sprite.Group(brick_monedas,
+																							brick_seta,
+																							brick_estrella)
 				self.coin_box_group = pg.sprite.Group()
+				"""
 
 		def setup_flag_pole(self):
 				"""Creates the flag pole at the end of the level"""
@@ -422,7 +456,7 @@ class Level1(tools._State):
 				"""
 				lista_bowsers = []
 				for i in range(1, c.NUM_OPERACIONES + 1):
-						lista_bowsers.append(enemies.Bowser())
+						lista_bowsers.append(enemies.Bowser(nivel=self.game_info[c.LEVEL]))
 				lista_grupos_enemigos = []
 				for i in range(len(lista_bowsers)):
 						lista_grupos_enemigos.append(pg.sprite.Group(lista_bowsers[i]))
@@ -430,11 +464,11 @@ class Level1(tools._State):
 				self.enemy_group_list = lista_grupos_enemigos
 
 
-		def setup_mario(self):
+		def setup_mario(self, persist):
 				"""Places Mario at the beginning of the level"""
-				self.mario = mario.Mario()
+				self.mario = mario.Mario(persist)
 				self.mario.rect.x = self.viewport.x + 110
-				self.mario.rect.bottom = c.GROUND_HEIGHT
+				self.mario.rect.bottom = c.GROUND_HEIGHT - 400
 
 
 		def setup_checkpoints(self):
@@ -463,7 +497,7 @@ class Level1(tools._State):
 																								 check13)
 				"""
 
-				lista_checkpoints = [checkpoint.Checkpoint(350, '1')]
+				lista_checkpoints = [checkpoint.Checkpoint(350, '1'), checkpoint.Checkpoint(3400, '1')]
 				for i in range(1, c.NUM_OPERACIONES + 1):
 						lista_checkpoints.append(checkpoint.Checkpoint(400 + (i-1)*1500, str(i+1)))
 
@@ -559,6 +593,7 @@ class Level1(tools._State):
 				self.shell_group.update(self.game_info)
 				self.brick_group.update()
 				self.coin_box_group.update(self.game_info)
+
 				self.powerup_group.update(self.game_info, self.viewport)
 				self.coin_group.update(self.game_info, self.viewport)
 				self.brick_pieces_group.update()
@@ -738,6 +773,8 @@ class Level1(tools._State):
 								self.mario.state = c.SMALL_TO_BIG
 								self.mario.in_transition_state = True
 								self.convert_mushrooms_to_fireflowers()
+								self.game_info[c.MARIO_BIG] = True
+								self.game_info[c.MARIO_FIRE] = False
 						elif powerup.name == c.LIFE_MUSHROOM:
 								self.moving_score_list.append(
 										score.Score(powerup.rect.right - self.viewport.x,
@@ -760,6 +797,8 @@ class Level1(tools._State):
 										self.mario.state = c.SMALL_TO_BIG
 										self.mario.in_transition_state = True
 										self.convert_mushrooms_to_fireflowers()
+								self.game_info[c.MARIO_BIG] = True
+								self.game_info[c.MARIO_FIRE] = True
 
 						if powerup.name != c.FIREBALL:
 								powerup.kill()
@@ -822,6 +861,8 @@ class Level1(tools._State):
 				elif shell.state == c.SHELL_SLIDE:
 						if self.mario.big and not self.mario.invincible:
 								self.mario.state = c.BIG_TO_SMALL
+								self.game_info[c.MARIO_BIG] = False
+								self.game_info[c.MARIO_FIRE] = False
 						elif self.mario.invincible:
 								self.game_info[c.SCORE] += 200
 								self.moving_score_list.append(
@@ -927,9 +968,11 @@ class Level1(tools._State):
 				if self.mario.rect.y > brick.rect.y:
 						if brick.state == c.RESTING:
 								if self.mario.big and brick.contents is None:
-										setup.SFX['brick_smash'].play()
+										#Vamos a cancelar que se puedan romper bricks
+										#setup.SFX['brick_smash'].play()
 										self.check_if_enemy_on_brick(brick)
-										brick.kill()
+										#brick.kill()
+										"""
 										self.brick_pieces_group.add(
 												bricks.BrickPiece(brick.rect.x,
 																							 brick.rect.y - (brick.rect.height/2),
@@ -943,6 +986,7 @@ class Level1(tools._State):
 												bricks.BrickPiece(brick.rect.right,
 																							 brick.rect.y,
 																							 2, -6))
+										"""
 								else:
 										setup.SFX['bump'].play()
 										if brick.coin_total > 0:
@@ -1415,7 +1459,7 @@ class Level1(tools._State):
 						self.bounce_fireball(fireball)
 
 				elif enemy:
-						if not enemy.monstruo_principal:
+						if not enemy.monstruo_principal or enemy.fueguito:
 								self.fireball_kill(fireball, enemy)
 
 				elif shell:
@@ -1518,7 +1562,6 @@ class Level1(tools._State):
 						self.persist[c.TOP_SCORE] = self.game_info[c.SCORE]
 				if self.mario.dead:
 						self.persist[c.LIVES] -= 1
-
 				if self.persist[c.LIVES] == 0:
 						self.next = c.GAME_OVER
 						self.game_info[c.CAMERA_START_X] = 0
@@ -1530,8 +1573,11 @@ class Level1(tools._State):
 				else:
 						if self.mario.rect.x > 3670 \
 										and self.game_info[c.CAMERA_START_X] == 0:
-								self.game_info[c.CAMERA_START_X] = 3440
+								self.game_info[c.CAMERA_START_X] = 3040
 						self.next = c.LOAD_SCREEN
+				
+				#self.persist[c.MARIO_BIG] = False
+				#self.persist[c.MARIO_FIRE] = False
 
 
 		def check_if_time_out(self):

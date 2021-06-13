@@ -18,6 +18,8 @@ class Menu(tools._State):
                    c.LEVEL_STATE: None,
                    c.CAMERA_START_X: 0,
                    c.MARIO_DEAD: False,
+                   c.MARIO_BIG: False,
+                   c.MARIO_FIRE: False,
                    c.LEVEL: 1}
         self.startup(0.0, persist)
 
@@ -31,7 +33,7 @@ class Menu(tools._State):
 
         self.sprite_sheet = setup.GFX['title_screen']
         self.setup_background()
-        self.setup_mario()
+        self.setup_mario(persist)
         self.setup_cursor()
 
 
@@ -44,9 +46,9 @@ class Menu(tools._State):
         self.cursor.state = c.PLAYER1
 
 
-    def setup_mario(self):
+    def setup_mario(self, persist):
         """Places Mario at the beginning of the level"""
-        self.mario = mario.Mario()
+        self.mario = mario.Mario(persist)
         self.mario.rect.x = 110
         self.mario.rect.bottom = c.GROUND_HEIGHT
 

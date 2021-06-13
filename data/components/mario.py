@@ -7,12 +7,12 @@ from . import powerups
 
 
 class Mario(pg.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, persist):
         pg.sprite.Sprite.__init__(self)
         self.sprite_sheet = setup.GFX['mario_bros']
 
         self.setup_timers()
-        self.setup_state_booleans()
+        self.setup_state_booleans(persist)
         self.setup_forces()
         self.setup_counters()
         self.load_images_from_sheet()
@@ -39,14 +39,14 @@ class Mario(pg.sprite.Sprite):
         self.flag_pole_timer = 0
 
 
-    def setup_state_booleans(self):
+    def setup_state_booleans(self, persist):
         """Sets up booleans that affect Mario's behavior"""
         self.facing_right = True
         self.allow_jump = True
         self.dead = False
-        self.invincible = True #False
-        self.big = True #False
-        self.fire = True #False
+        self.invincible = False
+        self.big = persist[c.MARIO_BIG]
+        self.fire = persist[c.MARIO_FIRE]
         self.allow_fireball = True
         self.in_transition_state = False
         self.hurt_invincible = False
