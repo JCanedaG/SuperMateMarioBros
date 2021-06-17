@@ -64,7 +64,7 @@ class Menu(tools._State):
 
         self.image_dict = {}
         self.image_dict['GAME_NAME_BOX'] = self.get_image(
-            1, 60, 176, 88, (170, 100), setup.GFX['title_screen'])
+            1, 60, 250, 88, (0, 100), setup.GFX['title_screen'])
 
 
 
@@ -97,6 +97,8 @@ class Menu(tools._State):
         self.game_info[c.CURRENT_TIME] = self.current_time
         self.update_cursor(keys)
         self.overhead_info.update(self.game_info)
+        if self.game_info[c.LEVEL] > 1: 
+            self.game_info[c.LEVEL] = 1
 
         surface.blit(self.background, self.viewport, self.viewport)
         surface.blit(self.image_dict['GAME_NAME_BOX'][0],

@@ -28,7 +28,7 @@ class Control(object):
         self.state_dict = {}
         self.state_name = None
         self.state = None
-        self.partida_viva = False
+        #self.partida_viva = False
 
     def setup_states(self, state_dict, start_state):
         self.state_dict = state_dict

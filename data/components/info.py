@@ -29,7 +29,6 @@ class OverheadInfo(object):
         self.state = state
         self.special_state = None
         self.game_info = game_info
-        self.nivel_actual = 1
 
         self.create_image_dict()
         self.create_score_group()
@@ -129,7 +128,7 @@ class OverheadInfo(object):
         self.create_label(self.mario_label, 'MARIO', 75, 30)
         self.create_label(self.world_label, 'WORLD', 450, 30)
         self.create_label(self.time_label, 'TIME', 625, 30)
-        self.create_label(self.stage_label, '1-'+str(self.nivel_actual), 472, 55)
+        self.create_label(self.stage_label, '1-'+str(self.game_info[c.LEVEL]), 472, 55)
 
         self.label_list = [self.mario_label,
                            self.world_label,
@@ -223,7 +222,6 @@ class OverheadInfo(object):
         self.create_label(codigo_label, 'TU CODIGO ES ' + str(codigo), 180, 400)
 
         self.game_over_label = [game_label, over_label, nivel_alcanzado_label, codigo_label]
-
 
     def create_time_out_label(self):
         """Create the label for the time out screen"""

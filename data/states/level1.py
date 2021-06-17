@@ -744,6 +744,8 @@ class Level1(tools._State):
 								self.mario.y_vel = -1
 								self.mario.state = c.BIG_TO_SMALL
 								self.convert_fireflowers_to_mushrooms()
+								self.game_info[c.MARIO_BIG] = False
+								self.game_info[c.MARIO_FIRE] = False
 						elif self.mario.hurt_invincible:
 								pass
 						else:
@@ -1459,7 +1461,7 @@ class Level1(tools._State):
 						self.bounce_fireball(fireball)
 
 				elif enemy:
-						if not enemy.monstruo_principal or enemy.fueguito:
+						if not enemy.monstruo_principal and not enemy.fueguito:
 								self.fireball_kill(fireball, enemy)
 
 				elif shell:
@@ -1564,7 +1566,11 @@ class Level1(tools._State):
 						self.persist[c.LIVES] -= 1
 				if self.persist[c.LIVES] == 0:
 						self.next = c.GAME_OVER
+						#self.overhead_info_display = info.OverheadInfo(self.game_info, c.GAME_OVER)
 						self.game_info[c.CAMERA_START_X] = 0
+						#self.persist[c.LEVEL] = 1
+						self.persist[c.COIN_TOTAL] = 0
+						self.persist[c.SCORE] = 0
 				elif self.mario.dead == False:
 						self.next = c.MAIN_MENU
 						self.game_info[c.CAMERA_START_X] = 0
